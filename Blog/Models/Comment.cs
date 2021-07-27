@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Blog.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -38,6 +39,8 @@ namespace Blog.Models
         [DataType(DataType.Date)]
         [Display(Name = "Deleted Date")]
         public DateTime? Deleted { get; set; }
+
+        public ModerationType ModerationType { get; set; }
 
         // Navigation Properties
         public virtual Post Post { get; set; }
