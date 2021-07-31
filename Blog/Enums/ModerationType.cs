@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Blog.Enums
+namespace MVCBlog.Enums
 {
     public enum ModerationType
     {

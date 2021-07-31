@@ -1,4 +1,4 @@
-﻿using Blog.Enums;
+﻿using MVCBlog.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Blog.Models
+namespace MVCBlog.Models
 {
     public class Post
     {
