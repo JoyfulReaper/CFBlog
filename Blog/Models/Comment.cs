@@ -25,19 +25,19 @@ namespace MVCBlog.Models
         public string ModeratedBody { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Created Date")]
+        [Display(Name = "Created")]
         public DateTime Created { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Updated Date")]
+        [Display(Name = "Updated")]
         public DateTime? Updated { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Moderated Date")]
+        [Display(Name = "Moderated")]
         public DateTime? Moderated { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Deleted Date")]
+        [Display(Name = "Deleted")]
         public DateTime? Deleted { get; set; }
 
         public ModerationType ModerationType { get; set; }
