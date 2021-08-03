@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MVCBlog.Services;
 
 namespace MVCBlog
 {
@@ -44,6 +45,8 @@ namespace MVCBlog
             services.AddControllersWithViews();
 
             services.AddRazorPages();
+
+            services.AddScoped<DataService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

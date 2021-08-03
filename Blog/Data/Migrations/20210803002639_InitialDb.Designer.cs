@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCBlog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210731135725_InitialDb")]
+    [Migration("20210803002639_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,10 +18,10 @@ namespace MVCBlog.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.7")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Blog.Models.Blog", b =>
+            modelBuilder.Entity("MVCBlog.Models.Blog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace MVCBlog.Data.Migrations
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("Blog.Models.BlogUser", b =>
+            modelBuilder.Entity("MVCBlog.Models.BlogUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -74,6 +74,11 @@ namespace MVCBlog.Data.Migrations
 
                     b.Property<string>("ContentType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -153,7 +158,7 @@ namespace MVCBlog.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Blog.Models.Comment", b =>
+            modelBuilder.Entity("MVCBlog.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +209,7 @@ namespace MVCBlog.Data.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Blog.Models.Post", b =>
+            modelBuilder.Entity("MVCBlog.Models.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -258,7 +263,7 @@ namespace MVCBlog.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Blog.Models.Tag", b =>
+            modelBuilder.Entity("MVCBlog.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -416,26 +421,26 @@ namespace MVCBlog.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Blog.Models.Blog", b =>
+            modelBuilder.Entity("MVCBlog.Models.Blog", b =>
                 {
-                    b.HasOne("Blog.Models.BlogUser", "Author")
+                    b.HasOne("MVCBlog.Models.BlogUser", "Author")
                         .WithMany("Blogs")
                         .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Blog.Models.Comment", b =>
+            modelBuilder.Entity("MVCBlog.Models.Comment", b =>
                 {
-                    b.HasOne("Blog.Models.BlogUser", "Author")
+                    b.HasOne("MVCBlog.Models.BlogUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Blog.Models.BlogUser", "Moderator")
+                    b.HasOne("MVCBlog.Models.BlogUser", "Moderator")
                         .WithMany()
                         .HasForeignKey("ModeratorId");
 
-                    b.HasOne("Blog.Models.Post", "Post")
+                    b.HasOne("MVCBlog.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -448,13 +453,13 @@ namespace MVCBlog.Data.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Blog.Models.Post", b =>
+            modelBuilder.Entity("MVCBlog.Models.Post", b =>
                 {
-                    b.HasOne("Blog.Models.BlogUser", "Author")
+                    b.HasOne("MVCBlog.Models.BlogUser", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Blog.Models.Blog", "Blog")
+                    b.HasOne("MVCBlog.Models.Blog", "Blog")
                         .WithMany("Posts")
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -465,13 +470,13 @@ namespace MVCBlog.Data.Migrations
                     b.Navigation("Blog");
                 });
 
-            modelBuilder.Entity("Blog.Models.Tag", b =>
+            modelBuilder.Entity("MVCBlog.Models.Tag", b =>
                 {
-                    b.HasOne("Blog.Models.BlogUser", "Author")
+                    b.HasOne("MVCBlog.Models.BlogUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Blog.Models.Post", "Post")
+                    b.HasOne("MVCBlog.Models.Post", "Post")
                         .WithMany("Tags")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -493,7 +498,7 @@ namespace MVCBlog.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Blog.Models.BlogUser", null)
+                    b.HasOne("MVCBlog.Models.BlogUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -502,7 +507,7 @@ namespace MVCBlog.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Blog.Models.BlogUser", null)
+                    b.HasOne("MVCBlog.Models.BlogUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -517,7 +522,7 @@ namespace MVCBlog.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Blog.Models.BlogUser", null)
+                    b.HasOne("MVCBlog.Models.BlogUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -526,26 +531,26 @@ namespace MVCBlog.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Blog.Models.BlogUser", null)
+                    b.HasOne("MVCBlog.Models.BlogUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Blog.Models.Blog", b =>
+            modelBuilder.Entity("MVCBlog.Models.Blog", b =>
                 {
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("Blog.Models.BlogUser", b =>
+            modelBuilder.Entity("MVCBlog.Models.BlogUser", b =>
                 {
                     b.Navigation("Blogs");
 
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("Blog.Models.Post", b =>
+            modelBuilder.Entity("MVCBlog.Models.Post", b =>
                 {
                     b.Navigation("Comments");
 
