@@ -1,5 +1,57 @@
-﻿@{
-    ViewData["Title"] = "Contact";
+﻿@using MVCBlog.ViewModels
+@model ContactMe
+
+@{
+    ViewData["Title"] = "Contact Me";
 }
 
-<h1>Contact</h1>
+<main class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p>Want to get in touch? Fill out the form below to send me a message and I will get back to you as soon as possible!</p>
+                <div class="my-5">
+                    <form asp-action="Contact">
+                        <div class="form-floating">
+                            <input class="form-control" asp-for="Name" type="text" placeholder="Enter your name" required data-validation-required-message="Please enter your name." />
+                            <label for="Name">Name</label>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-floating">
+                            <input class="form-control" asp-for="Email" type="email" placeholder="Enter your email" required data-validation-required-message="Please enter your email address." />
+                            <label for="Email">Email address</label>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-floating">
+                            <input class="form-control" asp-for="Phone" type="tel" placeholder="Enter your phone number" />
+                            <label for="Phone">Phone Number</label>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-floating">
+                            <input class="form-control" type="text" asp-for="Subject" placeholder="Enter subject" required data-validation-required-message="Please enter a subject." />
+                            <label for="Subject">Subject</label>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div>
+                            <textarea class="form-control" asp-for="Message" rows="5" required></textarea>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <br />
+                        <button class="btn btn-primary text-uppercase" id="submitButton" type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        $('#Message').summernote({
+            height: 300,                 // set editor height
+            minHeight: null,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            focus: false                  // set focus to editable area after initializing summernote
+        });
+    </script>
+}

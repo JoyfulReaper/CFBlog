@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MVCBlog.Services;
+using MVCBlog.ViewModels;
 
 namespace MVCBlog
 {
@@ -47,6 +48,8 @@ namespace MVCBlog
             services.AddRazorPages();
 
             services.AddScoped<DataService>();
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddScoped<IBlogEmailSender, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
