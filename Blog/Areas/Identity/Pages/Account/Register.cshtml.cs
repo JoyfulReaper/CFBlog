@@ -39,7 +39,7 @@ namespace MVCBlog.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        [BindProperty]
+        [BindProperty] // Can referer to property from page
         public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
@@ -48,6 +48,20 @@ namespace MVCBlog.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at most {1} characters.", MinimumLength = 2)]
+            [Display(Name = "Display Name")]
+            public string DisplayName { get; set; }
+
+            [Required]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at most {1} characters.", MinimumLength = 2)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(75, ErrorMessage = "The {0} must be at least {2} and at most {1} characters.", MinimumLength = 2)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -77,7 +91,19 @@ namespace MVCBlog.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new BlogUser { UserName = Input.Email, Email = Input.Email };
+                if(String.IsNullOrEmpty(Input.DisplayName))
+                {
+                    Input.DisplayName = $"{Input.FirstName} {Input.LastName}";
+                }
+
+                var user = new BlogUser {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    DisplayName = Input.DisplayName,
+                    UserName = Input.Email,
+                    Email = Input.Email 
+                };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
