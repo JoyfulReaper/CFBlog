@@ -14,37 +14,37 @@
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="BlogId" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="BlogId" class="form-label"></label>
                 <select asp-for="BlogId" class="form-control" asp-items="ViewBag.BlogId"></select>
                 <span asp-validation-for="BlogId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Abstract" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Abstract" class="form-label"></label>
                 <textarea asp-for="Abstract" class="form-control"></textarea>
                 <span asp-validation-for="Abstract" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Content" class="form-label"></label>
                 <textarea asp-for="Content" class="form-control"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ReadyStatus" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="ReadyStatus" class="form-label"></label>
                 <select asp-for="ReadyStatus" class="form-control" asp-items="Html.GetEnumSelectList<ReadyStatus>()"></select>
                 <span asp-validation-for="ReadyStatus" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input type="file" asp-for="Image" class="form-control" />
+            <div class="mb-3">
+                <label asp-for="Image" name="NewImage" class="form-label"></label>
+                <input type="file" asp-for="Image" class="form-control" accept=".jpg,.png,.webp,.gif,.jpeg"/>
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -56,5 +56,14 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#Content').summernote({
+            placeholder: "Content",
+            tabsize: 2,
+            height: 300,                 // set editor height
+            minHeight: null,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            focus: false                  // set focus to editable area after initializing summernote
+        });
+    </script>
 }

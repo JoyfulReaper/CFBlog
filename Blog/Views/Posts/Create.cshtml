@@ -10,39 +10,39 @@
 <h4>Post</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data" class="mb-3">
+    <div class="col-md-8">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div>
+            <div class="mb-3">
                 <label asp-for="BlogId" class="form-label"></label>
                 <select asp-for="BlogId" class="form-select" asp-items="ViewBag.BlogId"></select>
             </div>
-            <div class="form-floating">
+            <div class="form-floating mb-3">
                 <input asp-for="Title" class="form-control" placeholder="Title" />
                 <label asp-for="Title" class="form-label"></label>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-floating">
+            <div class="form-floating mb-3">
                 <textarea asp-for="Abstract" class="form-control" placeholder="Abstract"></textarea>
                 <label asp-for="Abstract" class="form-label"></label>
                 <span asp-validation-for="Abstract" class="text-danger"></span>
             </div>
-            <div class="form-floating">
+            <div class="form-floating mb-3">
                 <label asp-for="Content" class="form-label"></label>
                 <textarea asp-for="Content" class="form-control"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div>
-                <label asp-for="ReadyStatus" class="form-label"></label>
+                <label asp-for="ReadyStatus" class="form-label mb-3"></label>
                 <select asp-for="ReadyStatus" asp-items="@Html.GetEnumSelectList<ReadyStatus>()" class="form-select"></select>
                 <span asp-validation-for="ReadyStatus" class="text-danger"></span>
             </div>
             <div>
-                <label asp-for="Image" class="form-label"></label>
+                <label asp-for="Image" class="form-label mb-3"></label>
                 <input type="file" asp-for="Image" class="form-control" accept=".jpg,.png,.webp,.gif,.jpeg" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
-            <div class="form-floating mt-3">
+            <div class="form-floating mt-3 mb-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
