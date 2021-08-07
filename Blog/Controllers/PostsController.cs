@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,14 +18,17 @@ namespace MVCBlog.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ISlugService _slugService;
         private readonly IImageService _imageService;
+        private readonly UserManager<BlogUser> _userManager;
 
         public PostsController(ApplicationDbContext context,
             ISlugService slugService,
-            IImageService imageService)
+            IImageService imageService,
+            UserManager<BlogUser> userManager)
         {
             _context = context;
             _slugService = slugService;
             _imageService = imageService;
+            _userManager = userManager;
         }
 
         // GET: Posts
@@ -35,9 +39,9 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Posts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string slug)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(slug))
             {
                 return NotFound();
             }
@@ -45,7 +49,8 @@ namespace MVCBlog.Controllers
             var post = await _context.Posts
                 .Include(p => p.Author)
                 .Include(p => p.Blog)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(p => p.Tags)
+                .FirstOrDefaultAsync(m => m.Slug == slug);
             if (post == null)
             {
                 return NotFound();
@@ -73,6 +78,9 @@ namespace MVCBlog.Controllers
             {
                 post.Created = DateTime.Now;
 
+                var authorId = _userManager.GetUserId(User);
+                post.AuthorId = authorId;
+
                 post.ImageData = await _imageService.EncodeImageAsync(post.Image);
                 post.ContentType = _imageService.ContentType(post.Image);
 
@@ -89,6 +97,19 @@ namespace MVCBlog.Controllers
 
                 _context.Add(post);
                 await _context.SaveChangesAsync();
+
+                foreach(var tag in tagValues)
+                {
+                    _context.Add(new Tag()
+                    {
+                        PostId = post.Id,
+                        AuthorId = authorId,
+                        Text = tag
+                    });
+                }
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", post.AuthorId);
