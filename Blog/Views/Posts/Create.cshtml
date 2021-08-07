@@ -83,10 +83,9 @@
 </div>
 
 @section Scripts {
-
-    <script src="~/js/Custom.js"></script>
-
     <script>
+        let tagValues = '@ViewData["TagValues"]';
+
         $('#Content').summernote({
             placeholder: "Content",
             tabsize: 2,
@@ -96,4 +95,6 @@
             focus: false                  // set focus to editable area after initializing summernote
         });
     </script>
+
+    <script src="~/js/Custom.js"></script>
 }
