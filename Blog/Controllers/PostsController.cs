@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCBlog.Data;
+using MVCBlog.Enums;
 using MVCBlog.Models;
 using MVCBlog.Services;
+using X.PagedList;
 
 namespace MVCBlog.Controllers
 {
@@ -36,6 +38,33 @@ namespace MVCBlog.Controllers
         {
             var applicationDbContext = _context.Posts.Include(p => p.Author).Include(p => p.Blog);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> BlogPostIndex(int? id, int? page)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var pageNumber = page ?? 1;
+            var pageSize = 6;
+
+            //var posts = _context.Posts.Where(p => p.BlogId == id);
+            var posts = _context.Posts
+                .Where(p => p.BlogId == id && p.ReadyStatus == ReadyStatus.ProductionReady)
+                .OrderByDescending(p => p.Created)
+                .ToPagedListAsync(pageNumber, pageSize);
+
+            return View(await posts);
+        }
+
+        public async Task<IActionResult> TagIndex(string tag)
+        {
+            var allPostIds = _context.Tags.Where(t => t.Text == tag).Select(t => t.PostId);
+            var posts = _context.Posts.Where(p => allPostIds.Contains(p.Id)).ToList();
+
+            return View("Index", posts);
         }
 
         // GET: Posts/Details/5
@@ -86,9 +115,22 @@ namespace MVCBlog.Controllers
 
 
                 var slug = _slugService.UrlFriendly(post.Title);
+                var validationError = false;
+
+                if(string.IsNullOrEmpty(slug))
+                {
+                    validationError = true;
+                    ModelState.AddModelError("", "The title provided cannnot be used as it results in an empty slug.");
+                }
+
                 if(!_slugService.IsUnique(slug))
                 {
-                    ModelState.AddModelError("Title", "The title provided cannnot be used as it results ina duplicate slug.");
+                    validationError = true;
+                    ModelState.AddModelError("Title", "The title provided cannnot be used as it results in a duplicate slug.");
+                }
+
+                if(validationError)
+                {
                     ViewData["TagValues"] = string.Join(",", tagValues);
                     return View(post);
                 }
@@ -153,28 +195,44 @@ namespace MVCBlog.Controllers
             {
                 try
                 {
-                    var newPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
+                    var originalPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
 
-                    newPost.Updated = DateTime.Now;
-                    newPost.Title = post.Title;
-                    newPost.Abstract = post.Abstract;
-                    newPost.Content = post.Content;
-                    newPost.ReadyStatus = post.ReadyStatus;
+                    originalPost.Updated = DateTime.Now;
+                    //originalPost.Title = post.Title;
+                    originalPost.Abstract = post.Abstract;
+                    originalPost.Content = post.Content;
+                    originalPost.ReadyStatus = post.ReadyStatus;
+
+                    var newSlug = _slugService.UrlFriendly(post.Title);
+                    if(newSlug != originalPost.Slug)
+                    {
+                        if(_slugService.IsUnique(newSlug))
+                        {
+                            originalPost.Title = post.Title;
+                            originalPost.Slug = newSlug;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Title", "This title cannot be used as it results in a duplicate slug");
+                            ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
+                            return View(post);
+                        }
+                    }
 
                     if (newImage != null)
                     {
-                        newPost.ImageData = await _imageService.EncodeImageAsync(newImage);
-                        newPost.ContentType = _imageService.ContentType(newImage);
+                        originalPost.ImageData = await _imageService.EncodeImageAsync(newImage);
+                        originalPost.ContentType = _imageService.ContentType(newImage);
                     }
 
-                    _context.Tags.RemoveRange(newPost.Tags);
+                    _context.Tags.RemoveRange(originalPost.Tags);
 
                     foreach(var tag in tagValues)
                     {
                         _context.Add(new Tag()
                         {
                             PostId = post.Id,
-                            AuthorId = newPost.AuthorId,
+                            AuthorId = originalPost.AuthorId,
                             Text = tag
                         });
                     }
