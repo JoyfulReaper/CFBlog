@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MVCBlog.Data;
 using MVCBlog.Enums;
 using MVCBlog.Models;
@@ -15,14 +16,20 @@ namespace MVCBlog.Services
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<BlogUser> _userManager;
+        private readonly IImageService _imageService;
+        private readonly IConfiguration _configuration;
 
         public DataService(ApplicationDbContext context,
             RoleManager<IdentityRole> roleManager,
-            UserManager<BlogUser> userManager )
+            UserManager<BlogUser> userManager,
+            IImageService imageService,
+            IConfiguration configuration )
         {
             _context = context;
             _roleManager = roleManager;
             _userManager = userManager;
+            _imageService = imageService;
+            _configuration = configuration;
         }
 
         public async Task ManageDataAsync()
@@ -64,6 +71,7 @@ namespace MVCBlog.Services
                 GitHubUrl = "https://github.com/JoyfulReaper",
                 PersonalUrl = "https://kgivler.com",
                 EmailConfirmed = true,
+                ImageData = await _imageService.EncodeImageAsync(_configuration["DefaultUserImage"])
             };
 
             await _userManager.CreateAsync(adminUser, "Password123!");
@@ -79,6 +87,7 @@ namespace MVCBlog.Services
                 GitHubUrl = "https://github.com/JoyfulReaper",
                 PersonalUrl = "https://kgivler.com",
                 EmailConfirmed = true,
+                ImageData = await _imageService.EncodeImageAsync(_configuration["DefaultUserImage"])
             };
 
             await _userManager.CreateAsync(modUser, "Password123!");
