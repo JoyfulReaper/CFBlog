@@ -1,4 +1,9 @@
-﻿@model MVCBlog.Models.Post
+﻿@using MVCBlog.Services
+@using MVCBlog.Models
+
+@model Post
+
+@inject IImageService imageService
 
 @{
     ViewData["Title"] = "Details";
@@ -33,5 +38,44 @@
     </article>
 <hr />
 
-<!-- Display comments -->
-<!-- Display Image of Comment's Author -->
+<div>
+    @if(User.Identity.IsAuthenticated)
+     {
+        <form asp-action="Create" asp-controller="Comments" method="post">
+            @Html.Hidden("PostId", Model.Id)
+
+            <div class="mb-3">
+                <label class="h2 form-label font-weight-bold">Add Comment</label>
+                <textarea name="body" class="form-control" rows="10"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100 btn-sm">Submit</button>
+        </form>
+    }
+    else
+    {
+        <a class="btn w-100 btn-sm btn-dark" asp-area="Identity" asp-page="/Account/Login">Login to add comments</a>
+    }
+</div>
+
+<hr />
+
+<span class="btn btn-sm btn-dark w-100">@Model.Comments.Count COMMENT(S)</span>
+
+@foreach(var comment in Model.Comments)
+{
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="@imageService.DecodeImage(comment.Author.ImageData, comment.Author.ContentType)" class="me-3 mt-3 mb-3 rounded-circle" style="width:60px;" alt="User Image">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@comment.Author.DisplayName</h5>
+                <p class="card-text">@comment.Body</p>
+                <p class="card-text"><small class="text-muted">Posted on @comment.Created.ToString("MMM dd, yyyy")</small></p>
+            </div>
+        </div>
+    </div>
+</div>
+}

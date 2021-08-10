@@ -94,6 +94,8 @@ namespace MVCBlog.Controllers
                 .Include(p => p.Author)
                 .Include(p => p.Blog)
                 .Include(p => p.Tags)
+                .Include(p => p.Comments)
+                .ThenInclude(c => c.Author)
                 .FirstOrDefaultAsync(m => m.Slug == slug);
             if (post == null)
             {
@@ -217,6 +219,7 @@ namespace MVCBlog.Controllers
                     originalPost.Abstract = post.Abstract;
                     originalPost.Content = post.Content;
                     originalPost.ReadyStatus = post.ReadyStatus;
+                    originalPost.BlogId = post.BlogId;
 
                     var newSlug = _slugService.UrlFriendly(post.Title);
                     if(newSlug != originalPost.Slug)

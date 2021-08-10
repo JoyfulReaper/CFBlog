@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,13 @@ namespace MVCBlog.Controllers
     public class CommentsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<BlogUser> _userManager;
 
-        public CommentsController(ApplicationDbContext context)
+        public CommentsController(ApplicationDbContext context,
+            UserManager<BlogUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> OriginalIndex()
@@ -40,7 +44,11 @@ namespace MVCBlog.Controllers
         //GET: Comments
         public async Task<IActionResult> Index()
         {
-            var allComments = await _context.Comments.ToListAsync();
+            var allComments = await _context.Comments
+                .Include(p => p.Post)
+                .Include(p => p.Author)
+                .Include(p => p.Moderator)
+                .ToListAsync();
             return View(allComments);
         }
 
@@ -58,10 +66,13 @@ namespace MVCBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PostId,AuthorId,ModeratorId,Body,ModeratedBody,Created,Updated,Moderated,Deleted,ModerationType")] Comment comment)
+        public async Task<IActionResult> Create([Bind("PostId,Body")] Comment comment)
         {
             if (ModelState.IsValid)
             {
+                comment.AuthorId = _userManager.GetUserId(User);
+                comment.Created = DateTime.Now;
+
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
