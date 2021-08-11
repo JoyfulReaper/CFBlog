@@ -133,7 +133,7 @@ div.swal2-container.swal2-center.swal2-backdrop-show > div {
     background-color: blanchedalmond;
     border-radius: .25rem;
     border: 2px solid #ff993b;
-    outline 4px solid black;
+    outline: 4px solid black;
 }
 
 .tooltip-show {
