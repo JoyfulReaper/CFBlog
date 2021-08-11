@@ -1,7 +1,13 @@
 ﻿@using MVCBlog.Models 
+@using MVCBlog.Services
+@using MVCBlog.Enums
+@using Microsoft.AspNetCore.Identity
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
+
+@inject IImageService _imageService
+@inject UserManager<BlogUser> _userManager 
 
 @model IPagedList<Blog>
 
@@ -9,36 +15,52 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-            @foreach (var blog in Model)
-            {
-                <!-- Post preview-->
-                <div class="post-preview">
-                    <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@blog.Id">
-                        <h2 class="post-title">@blog.Name</h2>
-                        <h3 class="post-subtitle">@blog.Description</h3>
-                    </a>
-                    <p class="post-meta">
-                        Authored by
-                        <a href="#!">@blog.Author.DisplayName</a>
-                        on @blog.Created.ToString("MMM dd, yyyy")
-                    </p>
-                </div>
-                <!-- Divider-->
-                <hr class="my-4" />
-            }
 
-            <!-- Pager-->
-            <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
+<div class="row">
+    @foreach (var blog in Model)
+    {
+        <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+            <div class="card border-dark">
+                <img class="card-img-top" src="@_imageService.DecodeImage(blog.ImageData, blog.ContentType)" alt="Blog logo"/>
+                <div class="card-body text-center">
+                    <div class="bg-warning">
+                        <hr class="card-hr" />
+                        <h5 class="card-title">@blog.Name</h5>
+                        <hr class="card-hr"/>
+                    </div>
+                    <div>
+                        <p class="card-text cftooltip"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title=""
+                           data-bs-original-title="@blog.Description">@blog.Description</p>
+                    </div>
+                    <br />
+                    <div class="text-center">
+                        <a class="btn btn-dark btn-sm w-100 mb-2" asp-action="BlogPostIndex" asp-controller="Posts" asp-route-id="@blog.Id">Read Posts</a>
+                    </div>
+
+                    @if (User.IsInRole(BlogRole.Administrator.ToString()))
+                    {
+                        <div class="text-center">
+                            <a class="btn btn-dark btn-sm w-100 mb-2" asp-action="Create" asp-controller="Posts" asp-route-id="@blog.Id">Create Post</a>
+                        </div>
+                    }
+                    @if (User.IsInRole(BlogRole.Administrator.ToString()))
+                    {
+                        <div class="text-center">
+                            <a class="btn btn-dark btn-sm w-100 mb-2" asp-action="Edit" asp-controller="Blogs" asp-route-id="@blog.Id">Edit Blog</a>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
-    </div>
+    }
 </div>
 
 
-<!-- Add Paging Controls Here -->
-<div class="row">
+<!-- Paging Controls -->
+<div class="row mt-4">
     <div class="col">
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
     </div>
@@ -54,3 +76,21 @@
             })
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        var swalMsg = '@TempData["SweetAlert"]'
+        if (swalMsg != "") {
+            Swal.fire({
+                icon: 'success',
+                title: swalMsg,
+                timer: 2500
+            })
+        }
+
+        $(document).ready(function () {
+            $("p").tooltip();
+        });
+
+    </script>
+}

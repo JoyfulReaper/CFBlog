@@ -59,7 +59,7 @@
                             <div class="input-group-text mt-5">
                                 <input type="text" name="SearchTerm" class="form-control" placeholder="Search Term" />
                                 <div class="input-group">
-                                    <button class="btn btn-warning w-100 btn-sm" type="submit">Search</button>
+                                    <button id="searchButton" class="btn btn-warning w-100 btn-sm" type="submit">Search</button>
                                 </div>
                             </div>
                         </form>
@@ -71,8 +71,9 @@
     </header>
 
     <!-- Main Content-->
-
-    @RenderBody()
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
 
     <!-- Footer-->
     <footer class="border-top">
