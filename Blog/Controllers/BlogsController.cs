@@ -73,7 +73,6 @@ namespace MVCBlog.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
-            ViewData["HeaderImage"] = $"/img/{_configuration["DefaultHeaderImage"]}";
             ViewData["MainText"] = "Blog";
             ViewData["SubText"] = "Create";
 
@@ -105,6 +104,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Blogs/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -117,7 +117,10 @@ namespace MVCBlog.Controllers
             {
                 return NotFound();
             }
-            
+
+            ViewData["MainText"] = blog.Name;
+            ViewData["SubText"] = "Edit";
+
             return View(blog);
         }
 
@@ -173,6 +176,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Blogs/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -187,6 +191,9 @@ namespace MVCBlog.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["MainText"] = blog.Name;
+            ViewData["SubText"] = "Delete";
 
             return View(blog);
         }
