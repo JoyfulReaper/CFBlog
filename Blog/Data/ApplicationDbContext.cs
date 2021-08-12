@@ -1,9 +1,15 @@
-﻿using MVCBlog.Models;
+﻿/*
+ * Blog Project
+ * An ASP.NET MVC Blog
+ * Based on Coder Foundry Blog series
+ * 
+ * Kyle Givler 2021
+ * https://github.com/JoyfulReaper/Blog
+ */
+
+using MVCBlog.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MVCBlog.Data
 {

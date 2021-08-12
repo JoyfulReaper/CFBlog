@@ -1,11 +1,17 @@
-﻿using MailKit.Net.Smtp;
+﻿/*
+ * Blog Project
+ * An ASP.NET MVC Blog
+ * Based on Coder Foundry Blog series
+ * 
+ * Kyle Givler 2021
+ * https://github.com/JoyfulReaper/Blog
+ */
+
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MVCBlog.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MVCBlog.Services

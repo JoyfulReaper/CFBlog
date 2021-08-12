@@ -1,9 +1,15 @@
-﻿using MVCBlog.Data;
-using System;
-using System.Collections.Generic;
+﻿/*
+ * Blog Project
+ * An ASP.NET MVC Blog
+ * Based on Coder Foundry Blog series
+ * 
+ * Kyle Givler 2021
+ * https://github.com/JoyfulReaper/Blog
+ */
+
+using MVCBlog.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MVCBlog.Services
 {

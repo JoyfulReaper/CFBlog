@@ -1,10 +1,16 @@
-﻿using MVCBlog.Enums;
-using Microsoft.AspNetCore.Identity;
+﻿/*
+ * Blog Project
+ * An ASP.NET MVC Blog
+ * Based on Coder Foundry Blog series
+ * 
+ * Kyle Givler 2021
+ * https://github.com/JoyfulReaper/Blog
+ */
+
+using MVCBlog.Enums;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace MVCBlog.Models
 {
