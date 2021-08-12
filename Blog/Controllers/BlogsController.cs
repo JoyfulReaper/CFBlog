@@ -1,5 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+ * Blog Project
+ * An ASP.NET MVC Blog
+ * Based on Coder Foundry Blog series
+ * 
+ * Kyle Givler 2021
+ * https://github.com/JoyfulReaper/Blog
+ */
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MVCBlog.Data;
 using MVCBlog.Models;
 using MVCBlog.Services;
@@ -19,17 +28,21 @@ namespace MVCBlog.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
         private readonly UserManager<BlogUser> _userManager;
+        private readonly IConfiguration _configuration;
 
         public BlogsController(ApplicationDbContext context,
             IImageService imageService,
-            UserManager<BlogUser> userManager)
+            UserManager<BlogUser> userManager,
+            IConfiguration configuration)
         {
             _context = context;
             _imageService = imageService;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         // GET: Blogs
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Blogs.Include(b => b.Author);
@@ -37,6 +50,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Blogs/Details/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -59,6 +73,10 @@ namespace MVCBlog.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
+            ViewData["HeaderImage"] = $"/img/{_configuration["DefaultHeaderImage"]}";
+            ViewData["MainText"] = "Blog";
+            ViewData["SubText"] = "Create";
+
             return View();
         }
 

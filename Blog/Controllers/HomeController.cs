@@ -18,7 +18,6 @@ using MVCBlog.Services;
 using MVCBlog.Data;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
-using System.IO;
 using Microsoft.Extensions.Configuration;
 
 namespace MVCBlog.Controllers
@@ -54,7 +53,6 @@ namespace MVCBlog.Controllers
                 .OrderByDescending(b => b.Created)
                 .ToPagedListAsync(pageNumber, pageSize);
 
-            ViewData["HeaderImage"] = $"/img/{_configuration["DefaultHeaderImage"]}";
             ViewData["MainText"] = "Blog";
             ViewData["SubText"] = "A Blog by Kyle Givler";
 
@@ -63,7 +61,6 @@ namespace MVCBlog.Controllers
 
         public IActionResult About()
         {
-            ViewData["HeaderImage"] = $"/img/{_configuration["DefaultHeaderImage"]}";
             ViewData["MainText"] = "Blog";
             ViewData["SubText"] = "About";
 
@@ -72,7 +69,6 @@ namespace MVCBlog.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["HeaderImage"] = $"/img/{_configuration["DefaultHeaderImage"]}";
             ViewData["MainText"] = "Blog";
             ViewData["SubText"] = "Contact";
 

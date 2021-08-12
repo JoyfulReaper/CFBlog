@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration;
+
+@inject IConfiguration _configuration
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -47,7 +51,7 @@
     </nav>
 
     <!-- Page Header-->
-    <header class="masthead" style="background-image: url(@ViewData["HeaderImage"])">
+    <header class="masthead" style="background-image: url( @(@ViewData["HeaderImage"] == null ? $"/img/{_configuration["DefaultHeaderImage"]}" : ViewData["HeaderImage"]) )">
         <div class="container position-relative px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
