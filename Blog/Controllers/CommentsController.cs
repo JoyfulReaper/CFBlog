@@ -1,7 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+ * Blog Project
+ * An ASP.NET MVC Blog
+ * Based on Coder Foundry Blog series
+ * 
+ * Kyle Givler 2021
+ * https://github.com/JoyfulReaper/Blog
+ */
+
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,25 +33,29 @@ namespace MVCBlog.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> OriginalIndex()
         {
-            var orginalComments = await _context.Comments.ToListAsync();
+            var orginalComments = await _context.Comments
+                .Include(c => c.Post)
+                .Include(c => c.Author)
+                .ToListAsync();
             return View("Index", orginalComments);
         }
 
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> ModeratedIndex()
         {
-            var moderatedComments = await _context.Comments.Where(c => c.Moderated != null).ToListAsync();
+            var moderatedComments = await _context.Comments.Where(c => c.Moderated != null)
+                .Include(c => c.Post)
+                .Include(c => c.Author)
+                .ToListAsync();
             return View("Index", moderatedComments);
         }
 
-        //public async Task<IActionResult> DeletedIndex()
-        //{
-        //    var applicationDbContext = _context.Comments.Include(c => c.Author).Include(c => c.Moderator).Include(c => c.Post);
-        //    return View("Index", deletedComments);
-        //}
 
         //GET: Comments
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
             var allComments = await _context.Comments
@@ -82,6 +96,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Comments/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -180,6 +195,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Comments/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
