@@ -38,13 +38,6 @@ select, input, textarea, option, label, .tooltip-inner {
     font-weight: 600;
 }
 
-
-header.masthead .page-heading,
-header.masthead .post-heading,
-header.masthead .site-heading {
-    padding: 100px 0 100px 0;
-}
-
 #map {
     height: 400px;
 }
@@ -52,7 +45,6 @@ header.masthead .site-heading {
 .noline {
     text-decoration: none;
 }
-
 
 .note-editable, .note-placeholder {
     font-size: 22px;
