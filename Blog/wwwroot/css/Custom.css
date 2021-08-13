@@ -101,6 +101,7 @@ button.btn-sm, a.btn-sm {
     color: #212121;
     background-color: #212121;
     height: 3px;
+    border: solid;
 }
 
 .card-text {
