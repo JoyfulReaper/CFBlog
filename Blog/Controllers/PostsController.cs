@@ -86,12 +86,18 @@ namespace MVCBlog.Controllers
             return View(await posts);
         }
 
-        public async Task<IActionResult> TagIndex(string tag)
+        public async Task<IActionResult> TagIndex(string tag, int? page)
         {
-            var allPostIds = _context.Tags.Where(t => t.Text == tag).Select(t => t.PostId);
-            var posts = _context.Posts.Where(p => allPostIds.Contains(p.Id)).ToList();
+            var pageNumber = page ?? 1;
+            var pageSize = 6;
 
-            return View("Index", posts);
+            var allPostIds = _context.Tags.Where(t => t.Text == tag).Select(t => t.PostId);
+            var posts = _context.Posts.Where(p => allPostIds
+                .Contains(p.Id))
+                .OrderByDescending(t => t.Created)
+                .ToPagedListAsync(page, pageSize);
+
+            return View("BlogPostIndex", await posts);
         }
 
         // GET: Posts/Details/5
