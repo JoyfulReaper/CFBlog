@@ -1,5 +1,5 @@
 ﻿:root {
-    --primary-color: #1d5888;
+    --primary-color: #656cb8;
     --secondary-color: #037bfc;
     --dark-color: #292929;
     --white-color: #ebeadf;
@@ -9,7 +9,7 @@
     color: var(--white-color);
 }
 
-.bg-primary {
+.blog-primary {
     background-color: var(--primary-color);
 }
 
@@ -44,7 +44,7 @@
 
 
 .bg-cf {
-    background: var(--white-color);
+    background: var(--white-color)
 }
 
 header.masthead .page-heading .subheading,
@@ -79,6 +79,10 @@ button.btn-sm, a.btn-sm {
 
 .btn-dark:hover {
     border: 4px solid var(--secondary-color);
+}
+
+.btn-outline-dark {
+    color: var(--white-color);
 }
 
 .btn-warning {
