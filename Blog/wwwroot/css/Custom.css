@@ -1,4 +1,19 @@
-﻿.nav {
+﻿:root {
+    --primary-color: #1d5888;
+    --secondary-color: #037bfc;
+    --dark-color: #292929;
+    --white-color: #ebeadf;
+}
+
+.light-text {
+    color: var(--white-color);
+}
+
+.bg-primary {
+    background-color: var(--primary-color);
+}
+
+.nav {
     display: inline-block;
 }
 
@@ -29,7 +44,7 @@
 
 
 .bg-cf {
-    background: rgb(255, 153, 59, .35);
+    background: var(--white-color);
 }
 
 header.masthead .page-heading .subheading,
@@ -63,7 +78,7 @@ button.btn-sm, a.btn-sm {
 }
 
 .btn-dark:hover {
-    border: 4px solid #ff993b;
+    border: 4px solid var(--secondary-color);
 }
 
 .btn-warning {
@@ -147,7 +162,7 @@ div.swal2-container.swal2-center.swal2-backdrop-show > div {
 }
 
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px #ff993b;
+    box-shadow: inset 0 0 5px #008878;
     border-radius: 10px;
 }
 
