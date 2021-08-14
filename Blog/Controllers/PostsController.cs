@@ -78,12 +78,18 @@ namespace MVCBlog.Controllers
             var pageSize = 6;
 
             //var posts = _context.Posts.Where(p => p.BlogId == id);
-            var posts = _context.Posts
+            var posts = await _context.Posts
                 .Where(p => p.BlogId == id && p.ReadyStatus == ReadyStatus.ProductionReady)
                 .OrderByDescending(p => p.Created)
                 .ToPagedListAsync(pageNumber, pageSize);
 
-            return View(await posts);
+            var blog = await _context.Blogs
+                .FindAsync(id);
+
+            ViewData["MainText"] = blog.Name;
+            ViewData["SubText"] = blog.Description;
+
+            return View(posts);
         }
 
         public async Task<IActionResult> TagIndex(string tag, int? page)
@@ -140,10 +146,21 @@ namespace MVCBlog.Controllers
 
         // GET: Posts/Create
         [Authorize(Roles = "Administrator")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int? id)
         {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var selectedBlog = await _context.Blogs.FindAsync(id);
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name");
+            ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name", selectedBlog.Id);
+
+            ViewData["MainText"] = selectedBlog.Name;
+            ViewData["SubText"] = "Create Post";
+            ViewData["Blog"] = selectedBlog.Name;
+
             return View();
         }
 
@@ -203,11 +220,13 @@ namespace MVCBlog.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(BlogPostIndex), new { Id = post.BlogId });
             }
+
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", post.AuthorId);
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
-            return View(post);
+
+            return View("BlogPostIndex");
         }
 
         // GET: Posts/Edit/5

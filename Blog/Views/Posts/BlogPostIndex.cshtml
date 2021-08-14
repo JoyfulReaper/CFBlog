@@ -19,7 +19,7 @@
     @foreach (var post in Model)
     {
         var isAuthor = false;
-        if(User.Identity.IsAuthenticated)
+        if (User.Identity.IsAuthenticated)
         {
             isAuthor = (post.AuthorId == userManger.GetUserId(User));
         }
@@ -33,7 +33,11 @@
                         <hr class="card-hr" />
                     </div>
                     <div class="card-text">
-                        <p class="card-text">@post.Abstract</p>
+                        <p class="card-text cftooltip"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title=""
+                           data-bs-original-title="@post.Abstract">@post.Abstract</p>
                     </div>
 
                     <br />
@@ -70,3 +74,11 @@
          })
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("p").tooltip();
+        });
+    </script>
+}
