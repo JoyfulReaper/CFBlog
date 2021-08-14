@@ -12,8 +12,12 @@
         <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
-                <input asp-for="Username" class="form-control" disabled />
+                <input asp-for="Username" class="form-control" disabled placeholder="Username" />
                 <label asp-for="Username"></label>
+            </div>
+            <div class="form-floating">
+                <input asp-for="Input.DisplayName" class="form-control" placeholder="Display Name" />
+                <label asp-for="Input.DisplayName"></label>
             </div>
             <div class="form-floating">
                 <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Phone Number" />

@@ -42,6 +42,8 @@ namespace MVCBlog.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "Display Name")]
+            public string DisplayName { get; set; }
             public IFormFile Image { get; set; }
         }
 
@@ -49,12 +51,14 @@ namespace MVCBlog.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var displayName = (await _userManager.GetUserAsync(User)).DisplayName;
 
             Username = userName;
             CurrentImage = _imageService.DecodeImage(user.ImageData, user.ContentType);
 
             Input = new InputModel
             {
+                DisplayName = displayName,
                 PhoneNumber = phoneNumber
             };
         }
@@ -101,6 +105,12 @@ namespace MVCBlog.Areas.Identity.Pages.Account.Manage
                 // Only update the image if a new image was selected
                 user.ImageData = await _imageService.EncodeImageAsync(Input.Image);
                 user.ContentType = _imageService.ContentType(Input.Image);
+                await _userManager.UpdateAsync(user);
+            }
+
+            if (!string.IsNullOrEmpty(Input.DisplayName))
+            {
+                user.DisplayName = Input.DisplayName;
                 await _userManager.UpdateAsync(user);
             }
 

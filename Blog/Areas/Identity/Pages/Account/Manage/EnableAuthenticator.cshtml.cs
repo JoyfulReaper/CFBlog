@@ -149,7 +149,7 @@ namespace MVCBlog.Areas.Identity.Pages.Account.Manage
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("MVCBlog"),
+                _urlEncoder.Encode("Kyle's Blog"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }
