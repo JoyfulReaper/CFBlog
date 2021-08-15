@@ -258,7 +258,7 @@ namespace MVCBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,ReadyStatus")] Post post, IFormFile newImage, List<string> tagValues)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,ReadyStatus")] Post post, IFormFile image, List<string> tagValues)
         {
             if (id != post.Id)
             {
@@ -294,10 +294,10 @@ namespace MVCBlog.Controllers
                         }
                     }
 
-                    if (newImage != null)
+                    if (image != null)
                     {
-                        originalPost.ImageData = await _imageService.EncodeImageAsync(newImage);
-                        originalPost.ContentType = _imageService.ContentType(newImage);
+                        originalPost.ImageData = await _imageService.EncodeImageAsync(image);
+                        originalPost.ContentType = _imageService.ContentType(image);
                     }
 
                     _context.Tags.RemoveRange(originalPost.Tags);
