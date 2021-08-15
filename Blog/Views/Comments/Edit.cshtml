@@ -13,17 +13,17 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Moderate">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="@Model.Author.DisplayName" class="control-label"></label>
-                <input asp-for="@Model.Author.DisplayName" class="form-control" disabled />
-                <span asp-validation-for="@Model.Author.DisplayName" class="text-danger"></span>
+                <label asp-for="Author.DisplayName" class="control-label"></label>
+                <input asp-for="Author.DisplayName" class="form-control" readonly />
+                <span asp-validation-for="Author.DisplayName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Body" class="control-label"></label>
-                <input asp-for="Body" class="form-control" />
+                <input asp-for="Body" class="form-control" readonly />
                 <span asp-validation-for="Body" class="text-danger"></span>
             </div>
             <div class="form-group">

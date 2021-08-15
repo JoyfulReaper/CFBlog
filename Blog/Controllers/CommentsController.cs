@@ -135,7 +135,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Comments/Edit/5
-        [Authorize("Administrator,Moderator")]
+        [Authorize(Roles = "Administrator,Moderator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -161,42 +161,42 @@ namespace MVCBlog.Controllers
         // POST: Comments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Body")] Comment comment)
-        {
-            if (id != comment.Id)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("Id,Body")] Comment comment)
+        //{
+        //    if (id != comment.Id)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                var commentDb = await _context.Comments.Include(c => c.Post).FirstOrDefaultAsync(c => c.Id == comment.Id);
+        //    if (ModelState.IsValid)
+        //    {
+        //        var commentDb = await _context.Comments.Include(c => c.Post).FirstOrDefaultAsync(c => c.Id == comment.Id);
 
-                try
-                {
-                    commentDb.Body = comment.Body;
-                    commentDb.Updated = DateTime.Now;
+        //        try
+        //        {
+        //            commentDb.Body = comment.Body;
+        //            commentDb.Updated = DateTime.Now;
 
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CommentExists(comment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Details", "Posts", new { slug = commentDb.Post.Slug }, "commentSection");
-            }
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!CommentExists(comment.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction("Details", "Posts", new { slug = commentDb.Post.Slug }, "commentSection");
+        //    }
 
-            return View(comment);
-        }
+        //    return View(comment);
+        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -209,6 +209,7 @@ namespace MVCBlog.Controllers
 
             var commentDb = await _context.Comments
                 .Include(c => c.Post)
+                .Include(c => c.Author)
                 .FirstOrDefaultAsync(c => c.Id == comment.Id);
 
             if (ModelState.IsValid)
@@ -235,11 +236,12 @@ namespace MVCBlog.Controllers
                 }
                 return RedirectToAction("Details", "Posts", new { slug = commentDb.Post.Slug }, "commentSection");
             }
-            return View(comment);
+            comment.Author = commentDb.Author;
+            return View("Edit", comment);
         }
 
         // GET: Comments/Delete/5
-        [Authorize("Administrator,Moderator")]
+        [Authorize(Roles = "Administrator,Moderator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
