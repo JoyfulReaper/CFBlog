@@ -44,7 +44,7 @@
 <div class="row">
     <div class="col">
         @Html.PagedListPager(Model, page => Url.Action("SearchIndex", new { page = page, searchTerm = ViewData["searchTerm"]}),
-            new PagedListRenderOptionsBase
+            new PagedListRenderOptions
             {
                 LiElementClasses = new string[] { "page-item" },
                 PageClasses = new string[] { "page-link" }

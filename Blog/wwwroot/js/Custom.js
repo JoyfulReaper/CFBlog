@@ -35,7 +35,7 @@ function DeleteTag() {
     }
 
     while (tagCount > 0) {
-        if (selectedIndex.selectedIndex >= 0) {
+        if (tagList.selectedIndex >= 0) {
             tagList.options[tagList.selectedIndex] = null;
             --tagCount;
         }

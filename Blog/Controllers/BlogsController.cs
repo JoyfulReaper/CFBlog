@@ -96,7 +96,7 @@ namespace MVCBlog.Controllers
                 _context.Add(blog);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
 
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", blog.AuthorId);
@@ -154,6 +154,7 @@ namespace MVCBlog.Controllers
                     if (newImage != null)
                     {
                         newBlog.ImageData = await _imageService.EncodeImageAsync(newImage);
+                        newBlog.ContentType = _imageService.ContentType(newImage);
                     }
 
                     await _context.SaveChangesAsync();

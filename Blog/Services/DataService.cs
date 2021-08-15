@@ -79,7 +79,8 @@ namespace MVCBlog.Services
                 GitHubUrl = "https://github.com/JoyfulReaper",
                 PersonalUrl = "https://kgivler.com",
                 EmailConfirmed = true,
-                ImageData = await _imageService.EncodeImageAsync(_configuration["DefaultUserImage"])
+                ImageData = await _imageService.EncodeImageAsync(_configuration["DefaultUserImage"]),
+                ContentType = "image/jpeg"
             };
 
             await _userManager.CreateAsync(adminUser, "Password123!");
@@ -95,7 +96,8 @@ namespace MVCBlog.Services
                 GitHubUrl = "https://github.com/JoyfulReaper",
                 PersonalUrl = "https://kgivler.com",
                 EmailConfirmed = true,
-                ImageData = await _imageService.EncodeImageAsync(_configuration["DefaultUserImage"])
+                ImageData = await _imageService.EncodeImageAsync(_configuration["DefaultUserImage"]),
+                ContentType = "image/jpeg"
             };
 
             await _userManager.CreateAsync(modUser, "Password123!");
