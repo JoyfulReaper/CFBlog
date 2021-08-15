@@ -139,7 +139,7 @@ namespace MVCBlog.Controllers
 
             ViewData["HeaderImage"] = _imageService.DecodeImage(post.ImageData, post.ContentType);
             ViewData["MainText"] = post.Title;
-            ViewData["SubText"] = post.Abstract;
+            ViewData["SubText"] = $"{post.Abstract} - Published by {post.Author.DisplayName} on {post.Created.ToString("MMM dd, yyyy")}";
  
             return View(dataVm);
         }
