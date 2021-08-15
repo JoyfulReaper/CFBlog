@@ -60,7 +60,7 @@
     }
     else
     {
-        <a class="btn w-100 btn-sm btn-dark" asp-area="Identity" asp-page="/Account/Login">
+        <a class="btn w-100 btn-sm btn-dark" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="/BlogPosts/Slug/@Model.Post.Slug">
             Login to add comments
         </a>
     }

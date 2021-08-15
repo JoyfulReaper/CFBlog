@@ -89,7 +89,18 @@ namespace MVCBlog.Controllers
 
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                comment = await _context.Comments
+                    .Include(c => c.Post)
+                    .Where(c => c.Id == comment.Id)
+                    .FirstOrDefaultAsync();
+
+                if(comment == null)
+                {
+                    return NotFound();
+                }    
+
+                return RedirectToAction("Details", "Posts", new { Slug = comment.Post.Slug }, "commentSection");
             }
 
             return View(comment);
