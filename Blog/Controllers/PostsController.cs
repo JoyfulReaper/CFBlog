@@ -148,18 +148,21 @@ namespace MVCBlog.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Create(int? id)
         {
-            if(id == null)
+            var blogs = _context.Blogs.ToList();
+
+            Blog selected = null;
+            if (id != null)
             {
-                return NotFound();
+                 selected = await _context.Blogs
+                    .FindAsync(id);
             }
 
-            var selectedBlog = await _context.Blogs.FindAsync(id);
-            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name", selectedBlog.Id);
+            ViewData["MainText"] = "Create Blog";
+            ViewData["SubText"] = "Create a new Blog";
 
-            ViewData["MainText"] = selectedBlog.Name;
-            ViewData["SubText"] = "Create Post";
-            ViewData["Blog"] = selectedBlog.Name;
+            ViewData["Blog"] = selected != null ? selected.Name : "Post";
+
+            ViewBag.BlogId = new SelectList(blogs, "Id", "Name", selected?.Id);
 
             return View();
         }

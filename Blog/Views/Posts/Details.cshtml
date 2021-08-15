@@ -146,7 +146,7 @@
                         </div>
                         <div class="col-2">
                             <form asp-action="Delete" asp-controller="Comments">
-                                @Html.Hidden("CommentId", comment.Id)
+                                @Html.Hidden("Id", comment.Id)
                                 @Html.Hidden("Slug", comment.Post.Slug)
                                 <button class="btn-sm btn-dark font-weight-bold w-100">DELETE</button>
                             </form>

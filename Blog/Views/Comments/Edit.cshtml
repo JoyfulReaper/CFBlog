@@ -1,4 +1,7 @@
-﻿@model MVCBlog.Models.Comment
+﻿@using MVCBlog.Enums
+@using MVCBlog.Models
+
+@model Comment
 
 @{
     ViewData["Title"] = "Edit";
@@ -14,19 +17,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="PostId" class="control-label"></label>
-                <select asp-for="PostId" class="form-control" asp-items="ViewBag.PostId"></select>
-                <span asp-validation-for="PostId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AuthorId" class="control-label"></label>
-                <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.AuthorId"></select>
-                <span asp-validation-for="AuthorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModeratorId" class="control-label"></label>
-                <select asp-for="ModeratorId" class="form-control" asp-items="ViewBag.ModeratorId"></select>
-                <span asp-validation-for="ModeratorId" class="text-danger"></span>
+                <label asp-for="@Model.Author.DisplayName" class="control-label"></label>
+                <input asp-for="@Model.Author.DisplayName" class="form-control" disabled />
+                <span asp-validation-for="@Model.Author.DisplayName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Body" class="control-label"></label>
@@ -39,32 +32,12 @@
                 <span asp-validation-for="ModeratedBody" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Updated" class="control-label"></label>
-                <input asp-for="Updated" class="form-control" />
-                <span asp-validation-for="Updated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Moderated" class="control-label"></label>
-                <input asp-for="Moderated" class="form-control" />
-                <span asp-validation-for="Moderated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Deleted" class="control-label"></label>
-                <input asp-for="Deleted" class="form-control" />
-                <span asp-validation-for="Deleted" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ModerationType" class="control-label"></label>
-                <select asp-for="ModerationType" class="form-control"></select>
+                <select asp-for="ModerationType" asp-items="Html.GetEnumSelectList<ModerationType>()" class="form-control"></select>
                 <span asp-validation-for="ModerationType" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="mt-3 mb-2 btn btn-dark btn-sm w-100" />
             </div>
         </form>
     </div>

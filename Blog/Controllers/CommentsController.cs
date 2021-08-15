@@ -55,7 +55,7 @@ namespace MVCBlog.Controllers
 
 
         //GET: Comments
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator,Moderator")]
         public async Task<IActionResult> Index()
         {
             var allComments = await _context.Comments
@@ -115,14 +115,18 @@ namespace MVCBlog.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _context.Comments
+                .Include(c => c.Author)
+                .Where(c => c.Id == id)
+                .FirstOrDefaultAsync();
+
             if (comment == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
-            ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id", comment.ModeratorId);
-            ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract", comment.PostId);
+
+            ViewData["ModerationType"] = new SelectList(_context.Users, "Id", "Id", comment.ModeratorId);
+
             return View(comment);
         }
 
@@ -141,6 +145,7 @@ namespace MVCBlog.Controllers
             if (ModelState.IsValid)
             {
                 var commentDb = await _context.Comments.Include(c => c.Post).FirstOrDefaultAsync(c => c.Id == comment.Id);
+
                 try
                 {
                     commentDb.Body = comment.Body;
@@ -233,7 +238,8 @@ namespace MVCBlog.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id, string slug)
         {
             var comment = await _context.Comments.FindAsync(id);
-            _context.Comments.Remove(comment);
+            //_context.Comments.Remove(comment);
+            comment.Deleted = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", "Posts", new { slug }, "commentSection");
