@@ -81,7 +81,7 @@
                 @if (comment.Deleted != null)
                 {
                     <span class="small">
-                        <span class="font-weight-bolder">Deleted</span> : @comment.Deleted?.ToString("MMM dd, yyyy")
+                        <span class="font-weight-bolder text-danger">Deleted</span> : @comment.Deleted?.ToString("MMM dd, yyyy")
                     </span>
                 }
                 else if (comment.Moderated != null)

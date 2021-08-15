@@ -344,6 +344,7 @@ namespace MVCBlog.Controllers
                 .Include(p => p.Author)
                 .Include(p => p.Blog)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (post == null)
             {
                 return NotFound();

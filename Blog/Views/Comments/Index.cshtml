@@ -1,14 +1,13 @@
-﻿@model IEnumerable<MVCBlog.Models.Comment>
+﻿@using MVCBlog.Models
+ 
+@model IEnumerable<Comment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Unmoderated Comments Index";
 }
 
-<h1>Index</h1>
+<h1>Comments</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -28,25 +27,40 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Body)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Updated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.DisplayName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Body)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author.DisplayName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" asp-route-slug="@item.Post.Slug">Edit</a> |
+                    @*<a asp-action="Delete" asp-route-id="@item.Id" asp-route-slug="@item.Post.Slug">Delete</a>*@
+                    @using (Html.BeginForm("Delete", "Comments", FormMethod.Post, new { id = "deleteForm", @class = "" }))
+                    {
+                        @Html.Hidden("Id", item.Id)
+                        @Html.Hidden("Slug", item.Post.Slug)
+
+                        @if((string)ViewData["HardDelete"] == "true")
+                    {
+                        @Html.Hidden("hardDelete", "true")
+                    }
+
+                        <a href="javascript:document.getElementById('deleteForm').submit()">
+                            <span>Delete</span>
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

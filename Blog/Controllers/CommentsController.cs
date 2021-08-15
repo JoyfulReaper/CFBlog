@@ -33,36 +33,64 @@ namespace MVCBlog.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> OriginalIndex()
-        {
-            var orginalComments = await _context.Comments
-                .Include(c => c.Post)
-                .Include(c => c.Author)
-                .ToListAsync();
-            return View("Index", orginalComments);
-        }
+        //[Authorize("Administrator,Moderator")]
+        //public async Task<IActionResult> OriginalIndex()
+        //{
+        //    var orginalComments = await _context.Comments
+        //        .Include(c => c.Post)
+        //        .Include(c => c.Author)
+        //        .ToListAsync();
+        //    return View("Index", orginalComments);
+        //}
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Moderator")]
         public async Task<IActionResult> ModeratedIndex()
         {
-            var moderatedComments = await _context.Comments.Where(c => c.Moderated != null)
+            var moderatedComments = await _context.Comments
+                .Where(c => c.Moderated != null)
                 .Include(c => c.Post)
                 .Include(c => c.Author)
                 .ToListAsync();
+
+            ViewData["MainText"] = "Comments";
+            ViewData["SubText"] = "All Moderated Comments";
+
             return View("Index", moderatedComments);
         }
 
+
+        [Authorize(Roles = "Administrator, Moderator")]
+        public async Task<IActionResult> DeletedIndex()
+        {
+            var deletedComments = await _context.Comments
+                .Where(c => c.Deleted != null)
+                .Include(c => c.Post)
+                .Include(c => c.Author)
+                .ToListAsync();
+
+            ViewData["MainText"] = "Comments";
+            ViewData["SubText"] = "All Deleted Comments";
+            ViewData["HardDelete"] = "true";
+
+            return View("Index", deletedComments);
+        }
 
         //GET: Comments
         [Authorize(Roles = "Administrator,Moderator")]
         public async Task<IActionResult> Index()
         {
+
             var allComments = await _context.Comments
                 .Include(p => p.Post)
                 .Include(p => p.Author)
                 .Include(p => p.Moderator)
+                .Where(c => c.Moderated == null)
+                .OrderByDescending(c => c.Created)
                 .ToListAsync();
+
+            ViewData["MainText"] = "Comments";
+            ViewData["SubText"] = "All Unmoderated Comments";
+
             return View(allComments);
         }
 
@@ -107,7 +135,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Comments/Edit/5
-        [Authorize]
+        [Authorize("Administrator,Moderator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -211,7 +239,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Comments/Delete/5
-        [Authorize]
+        [Authorize("Administrator,Moderator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -235,11 +263,19 @@ namespace MVCBlog.Controllers
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id, string slug)
+        public async Task<IActionResult> DeleteConfirmed(int id, string slug, string hardDelete)
         {
             var comment = await _context.Comments.FindAsync(id);
-            //_context.Comments.Remove(comment);
-            comment.Deleted = DateTime.Now;
+
+            if (hardDelete == "true")
+            {
+                _context.Comments.Remove(comment);
+            }
+            else
+            {
+                comment.Deleted = DateTime.Now;
+            }
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", "Posts", new { slug }, "commentSection");
