@@ -169,8 +169,9 @@ namespace MVCBlog.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
+
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", blog.AuthorId);
             return View(blog);
         }

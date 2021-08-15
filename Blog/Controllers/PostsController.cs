@@ -313,6 +313,7 @@ namespace MVCBlog.Controllers
                     }
 
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Details), "Posts", new { Slug = originalPost.Slug });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -325,7 +326,6 @@ namespace MVCBlog.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
             return View(post);
