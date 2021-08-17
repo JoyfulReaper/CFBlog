@@ -229,7 +229,7 @@ namespace MVCBlog.Controllers
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", post.AuthorId);
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
 
-            return View("BlogPostIndex");
+            return View(post);
         }
 
         // GET: Posts/Edit/5
