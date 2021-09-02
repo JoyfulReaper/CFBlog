@@ -140,11 +140,11 @@ div.swal2-container.swal2-center.swal2-backdrop-show > div {
 .tooltip-inner {
     max-width: 200px;
     padding: 3px 8px;
-    color: black;
+    color: var(--white-color);
     text-align: center;
-    background-color: blanchedalmond;
+    background-color: var(--secondary-color);
     border-radius: .25rem;
-    border: 2px solid #ff993b;
+    border: 2px solid var(--primary-color);
     outline: 4px solid black;
 }
 
