@@ -10,6 +10,12 @@
 
 <article>
     <div class="row">
+        @if (User.IsInRole("Administrator")) 
+        {
+        <div class="col-12 border">
+            Admin Menu: @Html.ActionLink("Edit", "Edit", "Posts", new { Id = Model.Post.Id })
+        </div>
+        }
         <div class="col-9 border-right">
             @Html.Raw(Model.Post.Content)
         </div>
