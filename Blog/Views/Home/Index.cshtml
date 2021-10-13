@@ -20,7 +20,7 @@
     @foreach (var blog in Model)
     {
         <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
-            <div class="card border-dark">
+            <div class="card border-dark m-5 p-3">
                 <img class="card-img-top" src="@_imageService.DecodeImage(blog.ImageData, blog.ContentType)" alt="Blog logo"/>
                 <div class="card-body text-center">
                     <div class="blog-primary">
