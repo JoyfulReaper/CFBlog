@@ -7,7 +7,7 @@ using MVCBlog.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MVCBlog.Controllers
+namespace MVCBlog.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
